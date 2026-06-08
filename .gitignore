@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch/Python data files
+data/
+*.zip
+*.tar.gz
+*.db3
+*.log
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+env/
+
+# IDE / Editors
+.vscode/
+.idea/
+.DS_Store
+*.xlsx

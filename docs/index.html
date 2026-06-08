@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AD-Winter-Dataset: Multimodal Winter Driving Perception & Physics Dataset</title>
+    <meta name="description" content="A comprehensive dataset hosting synchronized camera, IMU, GPS, vehicle dynamics, and mobile road weather (MARWIS) telemetry under winter snow and ice conditions.">
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+
+    <!-- Header / Navigation -->
+    <header class="glass-header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-snowflake snow-icon-rotate"></i>
+                <span>AD-Winter-Dataset</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#about"><i class="fa-solid fa-circle-info"></i> About</a>
+                <a href="#explorer"><i class="fa-solid fa-chart-line"></i> Interactive Explorer</a>
+                <a href="#tools"><i class="fa-solid fa-screwdriver-wrench"></i> Python Tools</a>
+                <a href="#downloads"><i class="fa-solid fa-download"></i> Downloads</a>
+                <a href="#citation"><i class="fa-solid fa-quote-right"></i> Cite</a>
+            </nav>
+            <div class="header-actions">
+                <a href="https://github.com/AD-Assurance-Lab/winter-driving-dataset" target="_blank" class="github-btn" id="github-link">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-bg-gradients">
+            <div class="grad-blob grad-1"></div>
+            <div class="grad-blob grad-2"></div>
+        </div>
+        <div class="hero-container">
+            <span class="badge"><i class="fa-solid fa-car-burst"></i> MI-Snow1000 + MCity-WSPI</span>
+            <h1>Unlocking the Physics of <span class="gradient-text">Winter Driving</span></h1>
+            <p class="hero-subtitle">
+                A multimodal autonomous driving dataset pairing lane perception with vehicle dynamics, inertial response, and mobile road weather friction telemetry under packed snow and ice.
+            </p>
+            <div class="hero-cta">
+                <a href="#explorer" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Explore Telemetry</a>
+                <a href="#downloads" class="btn btn-secondary"><i class="fa-solid fa-download"></i> Download Dataset</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section / Key Modules -->
+    <section id="about" class="about-section">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Dual-Module Architecture</h2>
+                <p>The dataset combines robust perception labeling across diverse winter corridors with high-fidelity vehicle dynamics testing at MCity.</p>
+            </div>
+            
+            <div class="modules-grid">
+                <!-- Module 1: Lane Perception -->
+                <div class="module-card">
+                    <div class="card-icon"><i class="fa-solid fa-road"></i></div>
+                    <h3>Module 1: REVA Perception</h3>
+                    <p class="module-tagline">MI-Snow1000 Lane Benchmarks</p>
+                    <p>Designed for semantic road understanding and lane boundary tracking in severe weather. Captured across 1,000 miles of highways and corridors in Michigan, Colorado, and Wyoming.</p>
+                    <ul class="card-features">
+                        <li><i class="fa-solid fa-check"></i> 4,888 manually annotated lanes (TuSimple format)</li>
+                        <li><i class="fa-solid fa-check"></i> 160,000 unlabeled context frames</li>
+                        <li><i class="fa-solid fa-check"></i> High snowfall, heavy glare, and whiteout conditions</li>
+                    </ul>
+                </div>
+                
+                <!-- Module 2: Physics-Dynamics -->
+                <div class="module-card card-accent">
+                    <div class="card-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                    <h3>Module 2: MCity-WSPI Physics</h3>
+                    <p class="module-tagline">Synchronized Vehicle Dynamics & Friction</p>
+                    <p>Designed for physics-informed NeRFs, Gaussian Splatting, and vehicle-slip estimation. Recorded on a Ford Mustang Mach-E platform under controlled maneuvers on prepared winter surfaces.</p>
+                    <ul class="card-features">
+                        <li><i class="fa-solid fa-check"></i> Synchronized 25Hz images & high-rate CAN data</li>
+                        <li><i class="fa-solid fa-check"></i> RTK-GPS + 6-DOF IMU (Z-acceleration ride-response)</li>
+                        <li><i class="fa-solid fa-check"></i> Direct road friction, ice % & water height via MARWIS</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Explorer Section -->
+    <section id="explorer" class="explorer-section">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Physics-Telemetry Explorer</h2>
+                <p>Scrub through a sample run (<strong>wmu-jan27-downtown-1</strong>) to see how front-camera images align with vehicle steering, velocity, wheel slip, and MARWIS surface friction in real time.</p>
+            </div>
+
+            <!-- Dashboard Layout -->
+            <div class="dashboard-container">
+                <!-- Left Column: Camera View -->
+                <div class="dashboard-camera-pane">
+                    <div class="camera-title-bar">
+                        <span><i class="fa-solid fa-camera"></i> Front camera (arenacam6)</span>
+                        <span id="frame-timestamp-label" class="timestamp-badge">TS: 1769537066.227</span>
+                    </div>
+                    <div class="camera-viewport">
+                        <!-- We will draw the viewport using dynamic canvas/SVG representing road conditions -->
+                        <div id="road-canvas-container" class="road-view-canvas">
+                            <div class="road-scene-layer layer-bg"></div>
+                            <div class="road-scene-layer layer-snow"></div>
+                            <div class="road-scene-layer layer-overlay-dashboard">
+                                <div class="hud-item"><span class="hud-lbl">SPEED</span><span class="hud-val" id="hud-speed-val">0.0 mph</span></div>
+                                <div class="hud-item"><span class="hud-lbl">SLIP</span><span class="hud-val text-red" id="hud-slip-val">0.0%</span></div>
+                                <div class="hud-item"><span class="hud-lbl">FRICTION</span><span class="hud-val" id="hud-frict-val">0.30</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playback-controls">
+                        <button id="play-pause-btn" class="ctrl-btn"><i class="fa-solid fa-play"></i> Play Run</button>
+                        <div class="slider-container">
+                            <input type="range" id="frame-slider" min="0" max="19" value="0" class="frame-scrubber">
+                        </div>
+                        <span id="frame-counter" class="frame-count-label">Frame: 0 / 19</span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Synced Charts -->
+                <div class="dashboard-telemetry-pane">
+                    <div class="chart-card">
+                        <h4><i class="fa-solid fa-chart-line"></i> Speed & Slip Comparison</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="speedChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h4><i class="fa-solid fa-arrow-down-up-across-line"></i> Steering & Friction Profile</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="frictionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="physics-insight-box">
+                <h4><i class="fa-solid fa-lightbulb"></i> Physics-Informed Gaussian Splatting & Simulation Parity</h4>
+                <p>
+                    By matching spatial camera frames directly to high-rate vehicle dynamics, researchers can reconstruct 3D scene geometry while incorporating localized physical attributes. For instance, the transition from bare cold pavement to snow-covered surfaces is reflected not only visually, but through a drop in MARWIS optical friction (from 0.85 to 0.28) and instant wheel slip spikes (up to 30%). This allows simulation engines to evaluate control limits with actual tire–road parity.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Python Tools & Code Block Section -->
+    <section id="tools" class="tools-section">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Python Loader & Integration</h2>
+                <p>Integrate the winter dataset into PyTorch training pipelines or Gaussian Splatting scripts using our provided loaders.</p>
+            </div>
+            
+            <div class="code-grid">
+                <div class="code-tabs-header">
+                    <span class="active-tab"><i class="fa-brands fa-python"></i> loader_example.py</span>
+                </div>
+                <pre class="code-block"><code><span class="code-keyword">from</span> tools.wspi_loader <span class="code-keyword">import</span> WSPISynchronizedDataset
+<span class="code-keyword">from</span> torch.utils.data <span class="code-keyword">import</span> DataLoader
+<span class="code-keyword">import</span> torchvision.transforms <span class="code-keyword">as</span> T
+
+<span class="code-comment"># Define standard PyTorch pipeline</span>
+transforms = T.Compose([
+    T.Resize((540, 960)),
+    T.ToTensor(),
+])
+
+dataset = WSPISynchronizedDataset(
+    metadata_csv_path=<span class="code-str">"metadata/wmu-jan27-downtown-1_sync.csv"</span>,
+    images_dir_path=<span class="code-str">"data/wmu-jan27-downtown-1/arenacam6"</span>,
+    transform=transforms
+)
+
+dataloader = DataLoader(dataset, batch_size=<span class="code-number">4</span>, shuffle=<span class="code-keyword">True</span>)
+
+<span class="code-keyword">for</span> images, physics <span class="code-keyword">in</span> dataloader:
+    <span class="code-comment"># Extract synced camera pose and surface properties</span>
+    poses = physics[<span class="code-str">'orientation'</span>] <span class="code-comment"># [Quaternion X, Y, Z, W]</span>
+    slips = physics[<span class="code-str">'wheel_slip'</span>]   <span class="code-comment"># Spikes on ice/snow patches</span>
+    frictions = physics[<span class="code-str">'marwis_friction'</span>]
+    
+    print(f<span class="code-str">"Loaded batch. Current speed: {physics['speeds'][:, 0]} mph"</span>)
+    <span class="code-comment"># Feed images & poses to NeRF / wheel-slip estimator</span></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Downloads Section -->
+    <section id="downloads" class="downloads-section">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Dataset Download Packages</h2>
+                <p>Download the pre-processed synchronized metadata CSVs directly from GitHub, or download the full image datasets from Hugging Face/Zenodo.</p>
+            </div>
+            
+            <div class="downloads-grid">
+                <!-- Package 1: Synced Metadata -->
+                <div class="download-card">
+                    <div class="dl-icon"><i class="fa-solid fa-file-csv"></i></div>
+                    <h4>Synchronized Metadata (CSV)</h4>
+                    <p>Includes synchronized vehicle state, IMU, GPS, and MARWIS logs for all 49 processed MCity runs. Zero image binary overhead.</p>
+                    <span class="file-size">Size: 45 MB</span>
+                    <a href="https://github.com/AD-Assurance-Lab/winter-driving-dataset/archive/refs/heads/main.zip" class="dl-btn"><i class="fa-solid fa-download"></i> Download CSVs</a>
+                </div>
+                
+                <!-- Package 2: MCity WSPI Images -->
+                <div class="download-card">
+                    <div class="dl-icon"><i class="fa-solid fa-file-zipper"></i></div>
+                    <h4>MCity WSPI Images & Logs</h4>
+                    <p>Full-resolution frontal camera images (25Hz) grouped by run date, plus original CSVs and 3.7GB ROS2 db3 highway bag file.</p>
+                    <span class="file-size">Size: ~85 GB</span>
+                    <a href="https://huggingface.co/datasets/AD-Assurance-Lab/winter-driving-dataset" target="_blank" class="dl-btn btn-secondary"><i class="fa-solid fa-cloud"></i> Hugging Face Repo</a>
+                </div>
+                
+                <!-- Package 3: REVA Lane Perception -->
+                <div class="download-card">
+                    <div class="dl-icon"><i class="fa-solid fa-images"></i></div>
+                    <h4>REVA Perception Module</h4>
+                    <p>Labeled set (TuSimple format train/val/test splits) and unlabeled driving frames across MI, CO, WY winter highways.</p>
+                    <span class="file-size">Size: ~12 GB</span>
+                    <a href="https://eugenetye.github.io/reva-dataset/" target="_blank" class="dl-btn btn-secondary"><i class="fa-solid fa-globe"></i> REVA Dataset Site</a>
+                </div>
+            </div>
+            
+            <div class="cli-download-box">
+                <h4><i class="fa-solid fa-terminal"></i> Quick Command Line Download</h4>
+                <p>Clone the tool repo and fetch specific run images using our downloader CLI:</p>
+                <pre class="cli-block"><code>git clone https://github.com/AD-Assurance-Lab/winter-driving-dataset.git
+cd winter-driving-dataset
+python3 tools/download_wspi.py --run wmu-jan27-downtown-1_images --dest_dir ./data</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation Section -->
+    <section id="citation" class="citation-section">
+        <div class="section-container">
+            <div class="section-title">
+                <h2>Citations</h2>
+                <p>If you use this dataset in your research, please cite the connected publications introducing the MI-Snow1000 and MCity-WSPI campaigns.</p>
+            </div>
+            
+            <div class="bibtex-container">
+                <div class="bibtex-header">
+                    <span>BibTeX Citation</span>
+                    <button class="copy-bib-btn" onclick="copyCitation()"><i class="fa-solid fa-copy"></i> Copy</button>
+                </div>
+                <pre class="bibtex-block" id="bibtex-code"><code>@article{tye2026misnow1000,
+  title={MI-Snow1000: A Comprehensive Dataset and Benchmark for Lane Detection in Adverse Winter Conditions},
+  author={Tye, Eugene and Clinton, Catherine and Asher, Zachary and Fong, Alvis},
+  journal={SAE International Journal of Connected and Autonomous Vehicles},
+  volume={9},
+  number={2},
+  pages={112--128},
+  year={2026},
+  publisher={SAE International}
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 AD Assurance Lab. Built in partnership with Western Michigan University and MCity.</p>
+            <p>Developed under the direction of Dr. Zachary Asher.</p>
+        </div>
+    </footer>
+
+    <!-- App Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
