@@ -100,7 +100,7 @@
         <div class="section-container">
             <div class="section-title">
                 <h2>Physics-Telemetry Explorer</h2>
-                <p>Scrub through a sample run (<strong>wmu-jan27-downtown-1</strong>) to see how front-camera images align with vehicle steering, velocity, wheel slip, and MARWIS surface friction in real time.</p>
+                <p>Scrub through a sample run (<strong>jan27-downtown-1</strong>) to see how front-camera images align with vehicle steering, velocity, wheel slip, and MARWIS surface friction in real time.</p>
             </div>
 
             <!-- Dashboard Layout -->
@@ -182,8 +182,8 @@ transforms = T.Compose([
 ])
 
 dataset = WSPISynchronizedDataset(
-    metadata_csv_path=<span class="code-str">"metadata/wmu-jan27-downtown-1_sync.csv"</span>,
-    images_dir_path=<span class="code-str">"data/wmu-jan27-downtown-1/arenacam6"</span>,
+    metadata_csv_path=<span class="code-str">"metadata/mcity_wspi/jan27-downtown-1_sync.csv"</span>,
+    images_dir_path=<span class="code-str">"data/mcity_wspi/jan27-downtown-1"</span>,
     transform=transforms
 )
 
@@ -240,10 +240,11 @@ dataloader = DataLoader(dataset, batch_size=<span class="code-number">4</span>, 
             
             <div class="cli-download-box">
                 <h4><i class="fa-solid fa-terminal"></i> Quick Command Line Download</h4>
-                <p>Clone the tool repo and fetch specific run images using our downloader CLI:</p>
+                <p>Clone the tool repo and fetch specific run images and pre-trained benchmarks using our downloader CLI:</p>
                 <pre class="cli-block"><code>git clone https://github.com/AD-Assurance-Lab/winter-driving-dataset.git
 cd winter-driving-dataset
-python3 tools/download_wspi.py --run wmu-jan27-downtown-1_images --dest_dir ./data</code></pre>
+python3 tools/download_wspi.py --run jan27-downtown-1_images --dest_dir ./data
+python3 tools/download_models.py --model all --dest_dir ./models</code></pre>
             </div>
         </div>
     </section>

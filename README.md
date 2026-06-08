@@ -16,12 +16,16 @@ winter-driving-dataset/
 │   ├── index.html
 │   ├── styles.css
 │   └── app.js
-├── metadata/                 # Synchronized master CSV telemetry files for MCity runs
-│   ├── wmu-jan27-downtown-1_sync.csv
-│   ├── feb23-2026_straight_10_sync.csv
-│   └── ... (49 runs total)
+├── metadata/                 # Tabular metadata and annotations
+│   ├── reva_perception/      # Module 1: train.json, val.json, test.json
+│   └── mcity_wspi/           # Module 2: jan27-downtown-1_sync.csv, ...
+├── models/                   # Pre-trained lane detection benchmark checkpoints
+│   ├── README.md             # Model info and Hugging Face weights download links
+│   ├── onnx/                 # (Local only) ONNX .onnx checkpoints
+│   └── pytorch/              # (Local only) PyTorch .pt / .pth checkpoints
 ├── tools/                    # Python loader and sync scripts
-│   ├── download_wspi.py      # CLI tool to download raw image zip files and bags
+│   ├── download_wspi.py      # CLI tool to download raw image zips
+│   ├── download_models.py    # CLI tool to download pre-trained benchmarks
 │   ├── wspi_sync.py          # CLI tool to perform nearest-neighbor sensor synchronization
 │   └── wspi_loader.py        # PyTorch-compatible dataset loader
 ├── README.md
@@ -33,11 +37,11 @@ winter-driving-dataset/
 
 ## Aligned Physics Variables
 
-Each row in the synchronized metadata CSVs under `metadata/` matches a single camera frame (named with its nanosecond Epoch timestamp) to the temporally nearest telemetry signals. Key variables include:
+Each row in the synchronized metadata CSVs under `metadata/mcity_wspi/` matches a single camera frame (named with its index, e.g. `frame_00000.png`) to the temporally nearest telemetry signals. Key variables include:
 
 | Group | Column Name | Source Sensor | Description |
 | :--- | :--- | :--- | :--- |
-| **Image** | `image_filename` | Windshield Camera | Name of the PNG image frame. |
+| **Image** | `image_filename` | Windshield Camera | Name of the PNG image frame (`frame_xxxxx.png`). |
 | **Time** | `timestamp_ns` | ROS Clock | Nanosecond epoch stamp. |
 | **GPS** | `latitude`, `longitude`, `altitude` | RTK-GPS | Geographic coordinate. |
 | **Pose** | `orientation_x` (y, z, w) | OxTS IMU | Orientation Quaternion. |
@@ -63,7 +67,12 @@ Each row in the synchronized metadata CSVs under `metadata/` matches a single ca
 ### 1. Downloading Data
 To download specific run packages (e.g., raw images or bags) without fetching the entire 85 GB dataset, use the download utility:
 ```bash
-python3 tools/download_wspi.py --run wmu-jan27-downtown-1_images --dest_dir ./data
+python3 tools/download_wspi.py --run jan27-downtown-1_images --dest_dir ./data
+```
+
+To download the pre-trained lane detection models:
+```bash
+python3 tools/download_models.py --model all --dest_dir ./models
 ```
 
 ### 2. Loading Aligned Data in PyTorch
@@ -74,8 +83,8 @@ from tools.wspi_loader import WSPISynchronizedDataset
 from torch.utils.data import DataLoader
 
 dataset = WSPISynchronizedDataset(
-    metadata_csv_path="metadata/wmu-jan27-downtown-1_sync.csv",
-    images_dir_path="data/wmu-jan27-downtown-1/arenacam6"
+    metadata_csv_path="metadata/mcity_wspi/jan27-downtown-1_sync.csv",
+    images_dir_path="data/mcity_wspi/jan27-downtown-1"
 )
 dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
 

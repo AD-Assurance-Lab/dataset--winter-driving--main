@@ -6,6 +6,9 @@ __pycache__/
 # PyTorch/Python data files
 data/
 images/
+models/**/*.onnx
+models/**/*.pt
+models/**/*.pth
 *.zip
 *.tar.gz
 *.db3

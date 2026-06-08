@@ -19,7 +19,7 @@ class WSPISynchronizedDataset(Dataset):
     def __init__(self, metadata_csv_path, images_dir_path, transform=None):
         """
         Args:
-            metadata_csv_path (str): Path to the synchronized CSV file (e.g. 'wmu-jan27-downtown-1_sync.csv').
+            metadata_csv_path (str): Path to the synchronized CSV file (e.g. 'jan27-downtown-1_sync.csv').
             images_dir_path (str): Path to the folder containing raw images for this run.
             transform (callable, optional): Optional transform to be applied on a PIL image.
         """
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     if not HAS_TORCH:
         print("Note: PyTorch not found. Running WSPISynchronizedDataset in standalone mode (pandas only).")
         # Standalone pandas test
-        csv_path = "/home/za/ad_assurance/winter-driving-dataset/metadata/wmu-jan27-downtown-1_sync.csv"
+        csv_path = "/home/za/ad_assurance/winter-driving-dataset/metadata/mcity_wspi/jan27-downtown-1_sync.csv"
         if os.path.exists(csv_path):
             dataset = WSPISynchronizedDataset(csv_path, "/dummy/path")
             print("Loaded synchronized CSV with", len(dataset.df), "rows.")

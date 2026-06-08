@@ -111,7 +111,7 @@ def main():
     parser = argparse.ArgumentParser(description="Synchronize camera images with vehicle telemetry CSVs.")
     parser.add_argument("--images_dir", required=True, help="Path to the directory containing raw camera images for a run.")
     parser.add_argument("--csv_dir", required=True, help="Path to the folder containing telemetry CSVs.")
-    parser.add_argument("--run_name", required=True, help="Name of the run (e.g. 'wmu-jan27-downtown-1').")
+    parser.add_argument("--run_name", required=True, help="Name of the run (e.g. 'jan27-downtown-1').")
     parser.add_argument("--marwis_files", nargs="*", default=[], help="Filenames of MARWIS CSV files in the csv_dir.")
     parser.add_argument("--output_file", required=True, help="Path to save the output synchronized CSV.")
     parser.add_argument("--tire_radius", type=float, default=0.363, help="Tire radius in meters (default: 0.363m).")

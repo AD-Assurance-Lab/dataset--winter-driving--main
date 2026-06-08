@@ -1,6 +1,6 @@
 // Interactive Telemetry Explorer Logic
 document.addEventListener("DOMContentLoaded", () => {
-    // 20 Aligned Frames of Sample Telemetry (wmu-jan27-downtown-1 excerpt)
+    // 20 Aligned Frames of Sample Telemetry (jan27-downtown-1 excerpt)
     const runData = [
         { frame: 0, ts: 1769537064.131, speed: 28.5, wheelSpeed: 28.5, steering: -1.2, friction: 0.81, road: "Dry Pavement", temp: -5.4, slip: 0.0, abs: 0 },
         { frame: 1, ts: 1769537064.536, speed: 29.8, wheelSpeed: 29.8, steering: -1.0, friction: 0.80, road: "Dry Pavement", temp: -5.4, slip: 0.0, abs: 0 },
