@@ -5,6 +5,7 @@ __pycache__/
 
 # PyTorch/Python data files
 data/
+images/
 *.zip
 *.tar.gz
 *.db3
