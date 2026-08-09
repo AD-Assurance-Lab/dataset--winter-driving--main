@@ -41,7 +41,20 @@ class WSPISynchronizedDataset(Dataset):
             'abs_active', 'esc_active', 'trac_active',
             'marwis_friction', 'marwis_surface_temp_c', 'marwis_ice_percent', 'marwis_water_film_height'
         ]
-        self.df[self.numeric_cols] = self.df[self.numeric_cols].apply(pd.to_numeric, errors='coerce').fillna(0.0)
+        self.df[self.numeric_cols] = self.df[self.numeric_cols].apply(pd.to_numeric, errors='coerce')
+
+        # MARWIS telemetry is absent on 46% of frames (32 of 49 runs). These are
+        # left as NaN rather than filled: a 0.0 friction reading is a physically
+        # meaningful value, so filling would silently train a regressor on
+        # "this surface has zero grip" for every unlogged frame. Callers must
+        # mask on `marwis_valid` before using any marwis_* channel.
+        self.marwis_cols = [c for c in self.numeric_cols if c.startswith('marwis_')]
+        self.df['marwis_valid'] = self.df[self.marwis_cols].notna().all(axis=1)
+
+        # Vehicle channels are dense, so a zero fill is safe there.
+        vehicle_cols = [c for c in self.numeric_cols if not c.startswith('marwis_')]
+        self.df[vehicle_cols] = self.df[vehicle_cols].fillna(0.0)
+
         self.df['marwis_road_condition'] = self.df['marwis_road_condition'].fillna('unknown')
 
     def __len__(self):
@@ -74,8 +87,11 @@ class WSPISynchronizedDataset(Dataset):
             'gps': torch.tensor([row['latitude'], row['longitude'], row['altitude']], dtype=torch.float32),
             'orientation': torch.tensor([row['orientation_x'], row['orientation_y'], row['orientation_z'], row['orientation_w']], dtype=torch.float32),
             
-            # IMU
-            'angular_velocity': torch.tensor([row['ang_vel_x'], row['ang_vel_y'], row['ang_vel_z']], dtype=torch.float32) if 'ang_vel_x' in row else torch.tensor([row['angular_velocity_x'], row['angular_velocity_y'], row['angular_velocity_z']], dtype=torch.float32),
+            # IMU. Accelerations are in the sensor frame WITH gravity present
+            # (median a_z is -9.80 m/s^2); remove it before treating a_z as ride
+            # response. The channels also carry isolated single-sample spikes -
+            # see tools/analyze_friction.py for the median filter used.
+            'angular_velocity': torch.tensor([row['angular_velocity_x'], row['angular_velocity_y'], row['angular_velocity_z']], dtype=torch.float32),
             'linear_acceleration': torch.tensor([row['linear_acceleration_x'], row['linear_acceleration_y'], row['linear_acceleration_z']], dtype=torch.float32),
             
             # Dynamics
@@ -85,12 +101,14 @@ class WSPISynchronizedDataset(Dataset):
             'controls': torch.tensor([row['throttle_pedal'], row['brake_pedal']], dtype=torch.float32),
             'safety_flags': torch.tensor([row['abs_active'], row['esc_active'], row['trac_active']], dtype=torch.float32),
             
-            # MARWIS Road Condition
+            # MARWIS road condition. NaN where the sensor was not logging;
+            # gate on marwis_valid before use.
+            'marwis_valid': torch.tensor(bool(row['marwis_valid'])),
             'marwis_friction': torch.tensor(row['marwis_friction'], dtype=torch.float32),
             'marwis_surface_temp_c': torch.tensor(row['marwis_surface_temp_c'], dtype=torch.float32),
             'marwis_ice_percent': torch.tensor(row['marwis_ice_percent'], dtype=torch.float32),
         }
-        
+
         return image, physics
 
 # Example Usage
@@ -98,12 +116,16 @@ if __name__ == '__main__':
     print("WSPI Loader Module successfully defined.")
     if not HAS_TORCH:
         print("Note: PyTorch not found. Running WSPISynchronizedDataset in standalone mode (pandas only).")
-        # Standalone pandas test
-        csv_path = "/home/za/ad_assurance/winter-driving-dataset/metadata/mcity_wspi/jan27-downtown-1_sync.csv"
-        if os.path.exists(csv_path):
-            dataset = WSPISynchronizedDataset(csv_path, "/dummy/path")
-            print("Loaded synchronized CSV with", len(dataset.df), "rows.")
-            print("Sample row:")
-            print(dataset.df.iloc[1000][['image_filename', 'vehicle_speed_mph', 'wheel_slip', 'marwis_road_condition', 'marwis_friction']])
     else:
         print("PyTorch integration active.")
+
+    csv_path = os.path.join(os.path.dirname(__file__), "..", "metadata",
+                            "mcity_wspi", "jan27-downtown-1_sync.csv")
+    if os.path.exists(csv_path):
+        dataset = WSPISynchronizedDataset(csv_path, "/dummy/path")
+        print("Loaded synchronized CSV with", len(dataset.df), "rows.")
+        print("MARWIS valid on", int(dataset.df['marwis_valid'].sum()), "of them.")
+        print("Sample row:")
+        print(dataset.df.iloc[1000][['image_filename', 'vehicle_speed_mph',
+                                     'wheel_slip', 'marwis_road_condition',
+                                     'marwis_friction']])

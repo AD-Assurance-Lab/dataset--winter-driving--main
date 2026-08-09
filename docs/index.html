@@ -31,7 +31,7 @@
                 <a href="#citation"><i class="fa-solid fa-quote-right"></i> Cite</a>
             </nav>
             <div class="header-actions">
-                <a href="https://github.com/AD-Assurance-Lab/winter-driving-dataset" target="_blank" class="github-btn" id="github-link">
+                <a href="https://github.com/AD-Assurance-Lab/dataset--winter-driving--main" target="_blank" class="github-btn" id="github-link">
                     <i class="fa-brands fa-github"></i> GitHub
                 </a>
             </div>
@@ -86,7 +86,7 @@
                     <p class="module-tagline">Synchronized Vehicle Dynamics & Friction</p>
                     <p>Designed for physics-informed NeRFs, Gaussian Splatting, and vehicle-slip estimation. Recorded on a Ford Mustang Mach-E platform under controlled maneuvers on prepared winter surfaces.</p>
                     <ul class="card-features">
-                        <li><i class="fa-solid fa-check"></i> Synchronized 25Hz images & high-rate CAN data</li>
+                        <li><i class="fa-solid fa-check"></i> Synchronized images (20-48 Hz) & high-rate CAN data</li>
                         <li><i class="fa-solid fa-check"></i> RTK-GPS + 6-DOF IMU (Z-acceleration ride-response)</li>
                         <li><i class="fa-solid fa-check"></i> Direct road friction, ice % & water height via MARWIS</li>
                     </ul>
@@ -216,16 +216,16 @@ dataloader = DataLoader(dataset, batch_size=<span class="code-number">4</span>, 
                     <h4>Synchronized Metadata (CSV)</h4>
                     <p>Includes synchronized vehicle state, IMU, GPS, and MARWIS logs for all 49 processed MCity runs. Zero image binary overhead.</p>
                     <span class="file-size">Size: 45 MB</span>
-                    <a href="https://github.com/AD-Assurance-Lab/winter-driving-dataset/archive/refs/heads/main.zip" class="dl-btn"><i class="fa-solid fa-download"></i> Download CSVs</a>
+                    <a href="https://github.com/AD-Assurance-Lab/dataset--winter-driving--main/archive/refs/heads/main.zip" class="dl-btn"><i class="fa-solid fa-download"></i> Download CSVs</a>
                 </div>
                 
                 <!-- Package 2: MCity WSPI Images -->
                 <div class="download-card">
                     <div class="dl-icon"><i class="fa-solid fa-file-zipper"></i></div>
                     <h4>MCity WSPI Images & Logs</h4>
-                    <p>Full-resolution frontal camera images (25Hz) grouped by run date, plus original CSVs and 3.7GB ROS2 db3 highway bag file.</p>
-                    <span class="file-size">Size: ~85 GB</span>
-                    <a href="https://huggingface.co/datasets/AD-Assurance-Lab/winter-driving-dataset" target="_blank" class="dl-btn btn-secondary"><i class="fa-solid fa-cloud"></i> Hugging Face Repo</a>
+                    <p>Full-resolution frontal camera images (20-48 Hz) grouped by run date, plus the synchronization CSVs.</p>
+                    <span class="file-size">Size: ~140 GB (62 run archives)</span>
+                    <a href="https://huggingface.co/datasets/AD-Assurance-Lab/dataset--winter-driving--main" target="_blank" class="dl-btn btn-secondary"><i class="fa-solid fa-cloud"></i> Hugging Face Repo</a>
                 </div>
                 
                 <!-- Package 3: REVA Lane Perception -->
@@ -241,8 +241,8 @@ dataloader = DataLoader(dataset, batch_size=<span class="code-number">4</span>, 
             <div class="cli-download-box">
                 <h4><i class="fa-solid fa-terminal"></i> Quick Command Line Download</h4>
                 <p>Clone the tool repo and fetch specific run images and pre-trained benchmarks using our downloader CLI:</p>
-                <pre class="cli-block"><code>git clone https://github.com/AD-Assurance-Lab/winter-driving-dataset.git
-cd winter-driving-dataset
+                <pre class="cli-block"><code>git clone https://github.com/AD-Assurance-Lab/dataset--winter-driving--main.git
+cd dataset--winter-driving--main
 python3 tools/download_wspi.py --run jan27-downtown-1_images --dest_dir ./data
 python3 tools/download_models.py --model all --dest_dir ./models</code></pre>
             </div>
