@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AD-Winter-Dataset: Multimodal Winter Driving Perception & Physics Dataset</title>
-    <meta name="description" content="A comprehensive dataset hosting synchronized camera, IMU, GPS, vehicle dynamics, and mobile road weather (MARWIS) telemetry under winter snow and ice conditions.">
+    <title>MI-Snow1000 and MCity-WSPI: Winter Driving Lane Detection and Physics Dataset</title>
+    <meta name="description" content="MI-Snow1000: 4,888 dashcam frames of snow-covered roads annotated for lane detection in TuSimple format, with benchmark split and trained models; and MCity-WSPI: camera frames synchronized with vehicle dynamics, IMU, GPS and road friction telemetry on snow and ice.">
+    <script type="application/ld+json">
+{
+ "@context": "https://schema.org/",
+ "@type": "Dataset",
+ "name": "MI-Snow1000",
+ "alternateName": [
+  "MI-Snow1000 lane detection dataset",
+  "AD Winter Driving Dataset"
+ ],
+ "description": "MI-Snow1000 is a lane detection dataset for snow-covered roads: 4,888 dashcam frames (1280x720) from over 1,000 miles of winter driving in Michigan, Colorado and Wyoming, each annotated with the left and right boundaries of the ego lane in TuSimple format. Where snow buries the paint, the boundaries follow the drivable corridor shown by tire tracks and plow lines. Frames where no boundary can be placed with confidence are kept with no lanes labeled, so the correct output there is no lane. It includes a sequence-disjoint train, validation and test split (3,105, 887 and 337 frames), per-frame snow, glare and curvature tags, and trained SCNN, PolyLaneNet, LaneATT and CLRNet checkpoints in PyTorch and ONNX.",
+ "url": "https://ad-assurance-lab.github.io/dataset--winter-driving--main/",
+ "sameAs": [
+  "https://github.com/AD-Assurance-Lab/dataset--winter-driving--main",
+  "https://huggingface.co/datasets/AD-Assurance-Lab/winter-driving-dataset"
+ ],
+ "keywords": [
+  "lane detection",
+  "snow",
+  "winter driving",
+  "adverse weather",
+  "TuSimple format",
+  "autonomous driving",
+  "driver assistance",
+  "lane keeping",
+  "dashcam"
+ ],
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "isAccessibleForFree": true,
+ "creator": {
+  "@type": "Organization",
+  "name": "AD Assurance Lab, Western Michigan University",
+  "url": "https://github.com/AD-Assurance-Lab"
+ },
+ "spatialCoverage": "Michigan, Colorado and Wyoming, United States",
+ "variableMeasured": [
+  "ego-lane left boundary",
+  "ego-lane right boundary",
+  "snow severity",
+  "glare",
+  "road curvature"
+ ],
+ "distribution": [
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/json",
+   "contentUrl": "https://github.com/AD-Assurance-Lab/dataset--winter-driving--main/tree/main/metadata"
+  }
+ ]
+}
+    </script>
     <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,13 +119,13 @@
                 <!-- Module 1: Lane Perception -->
                 <div class="module-card">
                     <div class="card-icon"><i class="fa-solid fa-road"></i></div>
-                    <h3>Module 1: REVA Perception</h3>
-                    <p class="module-tagline">MI-Snow1000 Lane Benchmarks</p>
-                    <p>Designed for semantic road understanding and lane boundary tracking in severe weather. Captured across 1,000 miles of highways and corridors in Michigan, Colorado, and Wyoming.</p>
+                    <h3>Module 1: MI-Snow1000</h3>
+                    <p class="module-tagline">Lane Detection on Snow-Covered Roads</p>
+                    <p>Ego-lane boundaries annotated on dashcam frames from over 1,000 miles of winter driving in Michigan, Colorado and Wyoming. Where snow buries the paint, the boundaries follow the drivable corridor shown by tire tracks and plow lines; where no boundary can be placed with confidence, the frame has no lanes labeled and the correct output is no lane.</p>
                     <ul class="card-features">
-                        <li><i class="fa-solid fa-check"></i> 4,888 manually annotated lanes (TuSimple format)</li>
-                        <li><i class="fa-solid fa-check"></i> 160,000 unlabeled context frames</li>
-                        <li><i class="fa-solid fa-check"></i> High snowfall, heavy glare, and whiteout conditions</li>
+                        <li><i class="fa-solid fa-check"></i> 4,888 annotated frames, 1280x720 (TuSimple format)</li>
+                        <li><i class="fa-solid fa-check"></i> Sequence-disjoint benchmark split: 3,105 / 887 / 337 frames</li>
+                        <li><i class="fa-solid fa-check"></i> Bare, partly covered and fully snow-covered roads, with glare</li>
                     </ul>
                 </div>
                 
@@ -231,7 +281,7 @@ dataloader = DataLoader(dataset, batch_size=<span class="code-number">4</span>, 
                 <!-- Package 3: REVA Lane Perception -->
                 <div class="download-card">
                     <div class="dl-icon"><i class="fa-solid fa-images"></i></div>
-                    <h4>REVA Perception Module</h4>
+                    <h4>MI-Snow1000 Lane Detection</h4>
                     <p>Labeled set (TuSimple format train/val/test splits) and unlabeled driving frames across MI, CO, WY winter highways.</p>
                     <span class="file-size">Size: ~12 GB</span>
                     <a href="https://eugenetye.github.io/reva-dataset/" target="_blank" class="dl-btn btn-secondary"><i class="fa-solid fa-globe"></i> REVA Dataset Site</a>
@@ -241,8 +291,8 @@ dataloader = DataLoader(dataset, batch_size=<span class="code-number">4</span>, 
             <div class="cli-download-box">
                 <h4><i class="fa-solid fa-terminal"></i> Quick Command Line Download</h4>
                 <p>Clone the tool repo and fetch specific run images and pre-trained benchmarks using our downloader CLI:</p>
-                <pre class="cli-block"><code>git clone https://github.com/AD-Assurance-Lab/winter-driving-dataset.git
-cd winter-driving-dataset
+                <pre class="cli-block"><code>git clone https://github.com/AD-Assurance-Lab/dataset--winter-driving--main.git
+cd dataset--winter-driving--main
 python3 tools/download_wspi.py --run jan27-downtown-1_images --dest_dir ./data
 python3 tools/download_models.py --model all --dest_dir ./models</code></pre>
             </div>
@@ -254,23 +304,19 @@ python3 tools/download_models.py --model all --dest_dir ./models</code></pre>
         <div class="section-container">
             <div class="section-title">
                 <h2>Citations</h2>
-                <p>The MCity-WSPI physics dataset is currently preparing for publication. For now, please cite the REVA/MI-Snow1000 paper for the perception module, and check back for the MCity dynamics paper citation soon.</p>
+                <p>The MCity-WSPI physics dataset is currently preparing for publication. For now, please cite the MI-Snow1000 paper for the lane detection module, and check back for the MCity dynamics paper citation soon.</p>
             </div>
             
             <div class="bibtex-container">
                 <div class="bibtex-header">
-                    <span>BibTeX Citation (Module 1: REVA)</span>
+                    <span>BibTeX Citation (Module 1: MI-Snow1000)</span>
                     <button class="copy-bib-btn" onclick="copyCitation()"><i class="fa-solid fa-copy"></i> Copy</button>
                 </div>
-                <pre class="bibtex-block" id="bibtex-code"><code>@article{tye2026misnow1000,
+                <pre class="bibtex-block" id="bibtex-code"><code>@misc{tye2026misnow1000,
   title={MI-Snow1000: A Comprehensive Dataset and Benchmark for Lane Detection in Adverse Winter Conditions},
-  author={Tye, Eugene and Clinton, Catherine and Asher, Zachary and Fong, Alvis},
-  journal={SAE International Journal of Connected and Autonomous Vehicles},
-  volume={9},
-  number={2},
-  pages={112--128},
+  author={Tye, Eugene and Fanas Rojas, Johan and Masterson, Alex and Kadav, Parth and Hong, Guan Yue and Asher, Zachary D.},
   year={2026},
-  publisher={SAE International}
+  note={Manuscript under review}
 }</code></pre>
             </div>
         </div>

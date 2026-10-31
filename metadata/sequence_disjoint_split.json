@@ -1,0 +1,68 @@
+{
+ "mode": "similarity",
+ "detail": "100 contiguous blocks merged into 60 groups wherever two share a frame pair above cosine 0.95, guard band 10 frames",
+ "guard_band_frames": 10,
+ "n_blocks": null,
+ "session_coverage": 0.11579378068739771,
+ "counts": {
+  "train": 3105,
+  "val": 887,
+  "test": 337
+ },
+ "discarded": 540,
+ "leakage": {
+  "1": {
+   "n": 0,
+   "of": 356
+  },
+  "2": {
+   "n": 0,
+   "of": 356
+  },
+  "3": {
+   "n": 0,
+   "of": 356
+  },
+  "5": {
+   "n": 0,
+   "of": 356
+  },
+  "10": {
+   "n": 0,
+   "of": 356
+  }
+ },
+ "nearest_train_similarity": {
+  "mean": 0.8392789959907532,
+  "median": 0.8520151972770691,
+  "p10": 0.7544503509998322,
+  "frac_above_0_9": 0.06179775280898876,
+  "random_pair_baseline": 0.34894534945487976
+ },
+ "similarity_threshold": 0.95,
+ "caveat": "No test frame has a training frame above the similarity threshold, and none is within the guard band in capture order. Leakage below the threshold is not excluded.",
+ "same_place_removed": {
+  "frames": [
+   "frame_01538.jpg",
+   "frame_01549.jpg",
+   "frame_03628.jpg",
+   "frame_03629.jpg",
+   "frame_03631.jpg",
+   "frame_03634.jpg",
+   "frame_03638.jpg",
+   "frame_03639.jpg",
+   "frame_03641.jpg",
+   "frame_03645.jpg",
+   "frame_03646.jpg",
+   "frame_03648.jpg",
+   "frame_03652.jpg",
+   "frame_03654.jpg",
+   "frame_03655.jpg",
+   "frame_04131.jpg",
+   "frame_04273.jpg",
+   "frame_04274.jpg",
+   "frame_04285.jpg"
+  ],
+  "method": "Every sequence-disjoint test frame was matched to training frames with SIFT and a RANSAC fundamental matrix (tools/audit_split_same_place.py: capture-order neighbours and the 100 most similar training frames; tools/audit_same_place_exhaustive.py: every training frame). Each test frame whose best match exceeded the 99.9th percentile of pairs at least 200 frames apart (28 consistent matches) was inspected beside its best match, and judged the same place only where the same buildings, trees or roadside objects appear in both. The threshold alone is not reliable: long straight roads converging on a vanishing point fit a fundamental matrix with many consistent matches between different places."
+ }
+}

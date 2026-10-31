@@ -1,6 +1,6 @@
 # Pre-Trained Lane Detection Benchmarks
 
-This directory tracks the documentation and hosting links for pre-trained deep learning checkpoints evaluated on the **REVA (MI-Snow1000)** perception module. 
+This directory tracks the documentation and hosting links for pre-trained deep learning checkpoints evaluated on the **MI-Snow1000** lane detection module. 
 
 To keep the git repository lightweight, the binary model weight files (such as `.pt`, `.pth`, and `.onnx` files) are listed in `.gitignore` and are not committed to GitHub. However, they are hosted publicly on Hugging Face for easy download.
 
@@ -8,7 +8,7 @@ To keep the git repository lightweight, the binary model weight files (such as `
 
 ## 1. Supported Model Architectures
 
-The dataset benchmark evaluates four popular lane detection architectures, trained on the MI-Snow1000 dataset:
+The dataset benchmark evaluates four popular lane detection architectures. Each checkpoint was trained from scratch on the training partition of the MI-Snow1000 benchmark split (`metadata/sequence_disjoint/train.json`, 3,105 frames), with random seed 0, using its code base's published configuration at a 320x180 input:
 
 | Model | Frame Size | Format | PyTorch File | ONNX Float32 File | ONNX Float16 File |
 | :--- | :--- | :--- | :--- | :--- | :--- |
